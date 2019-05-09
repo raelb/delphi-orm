@@ -231,16 +231,32 @@ type
     property BelongsToList: TMappingBelongsToList read FBelongsToList;
   end;
 
+procedure TraceMappingFieldList(MappingFieldList: TMappingFieldList);
+
 implementation
 
 uses
   SysUtils,
   Variants,
   StrUtils,
+  TraceTool,
   dorm.Utils,
   dorm.Commons;
-{ Entity }
 
+procedure TraceMappingFieldList(MappingFieldList: TMappingFieldList);
+var
+  MappingField: TMappingField;
+begin
+  MainTrace.Send('Begin Trace MappingFieldList');
+  for MappingField in MappingFieldList do
+  begin
+    MainTrace.Send('MappingField.name', MappingField.name);
+    MainTrace.Send('MappingField.FieldName', MappingField.FieldName);
+  end;
+  MainTrace.Send('---');
+end;
+
+{ Entity }
 constructor Entity.Create(const ATableName: string = ''; const APackageName: string = '');
 begin
   FTableName := ATableName;

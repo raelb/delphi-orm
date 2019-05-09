@@ -114,6 +114,9 @@ type
     function IsCoCEnabledForType(const AType: TRttiType): Boolean;
   end;
 
+var
+  MapCamelCaseToSnakeCase: Boolean = True;
+
 implementation
 
 uses
@@ -121,7 +124,38 @@ uses
   StrUtils,
   dorm.Utils,
   Typinfo,
-  dorm;
+  dorm, TraceTool;
+
+function IsUpperCase(C: Char): Boolean;
+begin
+  Result := (Ord(C) >= 65) and (Ord(C) <= 90);
+end;
+
+function FieldToSnakeCase(S: string): string;
+var
+  I: Integer;
+  WasLC: Boolean;
+begin
+  Result := '';
+  WasLC := False;
+  for I := 1 to Length(S) do
+  begin
+    if IsUpperCase(S[I]) then
+    begin
+      if WasLC then
+      begin
+        Result := Result + '_';
+        WasLC := False;
+      end;
+      Result := Result + LowerCase(S[I])
+    end
+    else
+    begin
+      WasLC := True;
+      Result := Result + S[I];
+    end;
+  end;
+end;
 
 { TCacheMappingStrategy }
 
@@ -335,13 +369,21 @@ procedure TAttributesMappingStrategy.GetMapping(const AType: TRttiType;
 var
   prop: TRttiProperty;
 begin
+  //MainTrace.Send('-- AttributesMappingStrategy.GetMapping');
+  //MainTrace.Send('AType.GetProperties Length', Length(AType.GetProperties));
+  //MainTrace.Send('ATable.Fields.Count', ATable.Fields.Count);
+  // Note: All properties have been set. ATable.Fields is empty, i.e. 0
+
+  // Gets Table Name
   ParseTable(AType, ATable);
   for prop in AType.GetProperties do
   begin
+    //MainTrace.Send('Name', Prop.Name);
     ParseField(AType, ATable, prop);
     ParseHasOne(AType, ATable, prop);
     ParseHasMany(AType, ATable, prop);
     ParseBelongsTo(AType, ATable, prop);
+    //MainTrace.Send('ATable.Fields.Count', ATable.Fields.Count);
   end;
 end;
 
@@ -509,6 +551,7 @@ end;
 function TAttributesMappingStrategy.GetOrCreateField(
   const ATable: TMappingTable; AProp: TRttiProperty): TMappingField;
 begin
+  //MainTrace.Send('-- GetOrCreateField');
   Result := ATable.FindByName(AProp.Name);
   if not Assigned(Result) then
   begin
@@ -538,6 +581,8 @@ var
   prop: TRttiProperty;
   collectionItemType: TRttiType;
 begin
+  //MainTrace.Send('-- TCoCMappingStrategy.GetMapping');
+
   if not IsCoCEnabledForType(AType) then
     Exit;
   ParseTable(AType, ATable);
@@ -572,12 +617,17 @@ var
   FieldType: string;
   RTTICache: TMappingCache;
 begin
+  //MainTrace.Send('-- TCoCMappingStrategy.ParseField');
   FieldType := TdormUtils.GetFieldType(AProp);
   field := ATable.AddField;
   if AnsiUpperCase(AProp.Name) = 'ID' then
     field.IsPK := True;
   field.Name := AProp.Name;
-  field.FieldName := AnsiUpperCase(AProp.Name);
+
+  if MapCamelCaseToSnakeCase then
+    Field.FieldName := FieldToSnakeCase(AProp.Name)
+  else
+    field.FieldName := AnsiUpperCase(AProp.Name);
   field.FieldType := FieldType;
 
   RTTICache.RTTIField := nil;

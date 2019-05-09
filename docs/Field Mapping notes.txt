@@ -1,0 +1,12 @@
+
+dorm.pas:
+Mapping strategies are created and added in TSession.Configure 
+Fields are mapped using FMappingStrategy.GetMapping 
+(called in e.g. TSession.FillList and TSession.Load)
+
+ TSession.FillList
+   TCacheMappingStrategy.GetMapping
+   Then
+     TAttributesMappingStrategy.GetMapping
+     TCoCMappingStrategy.GetMapping
+	 

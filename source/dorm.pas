@@ -733,6 +733,9 @@ begin
   rt := FCTX.GetType(APTypeInfo);
   _table := FMappingStrategy.GetMapping(rt);
   _fields := _table.Fields;
+
+  //TraceMappingFieldList(_Fields);
+
   if assigned(ACriteria) then
     SearcherClassname := TObject(ACriteria).ClassName
   else

@@ -38,6 +38,8 @@ type
     procedure AfterConstruction; override;
   end;
 
+var
+  ShowDormDebugTraces: Boolean = False;
 
 resourcestring
    SISessionName = 'dorm';
@@ -56,7 +58,8 @@ end;
 
 procedure TdormTraceToolLog.Debug(const Value: string);
 begin
-  TTrace.Debug.Send(Value);
+  if ShowDormDebugTraces then
+    TTrace.Debug.Send(Value);
 end;
 
 destructor TdormTraceToolLog.Destroy;
@@ -67,7 +70,8 @@ end;
 
 procedure TdormTraceToolLog.EnterLevel(const Value: string);
 begin
-  TTrace.Debug.EnterMethod(value);
+  if ShowDormDebugTraces then
+    TTrace.Debug.EnterMethod(value);
 end;
 
 procedure TdormTraceToolLog.Error(const Value: string);
@@ -77,12 +81,14 @@ end;
 
 procedure TdormTraceToolLog.ExitLevel(const Value: string);
 begin
-  TTrace.Debug.ExitMethod(Value);
+  if ShowDormDebugTraces then
+    TTrace.Debug.ExitMethod(Value);
 end;
 
 procedure TdormTraceToolLog.Info(const Value: string);
 begin
-  TTrace.Debug.Send(Value);
+  //if ShowDormDebugTraces then
+    TTrace.Debug.Send(Value);
 end;
 
 class procedure TdormTraceToolLog.register;
