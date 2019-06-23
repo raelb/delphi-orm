@@ -87,7 +87,7 @@ end;
 
 procedure TdormTraceToolLog.Info(const Value: string);
 begin
-  //if ShowDormDebugTraces then
+  if ShowDormDebugTraces then
     TTrace.Debug.Send(Value);
 end;
 
