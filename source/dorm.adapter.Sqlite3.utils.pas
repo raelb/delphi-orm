@@ -6,20 +6,24 @@ uses
   dorm;
 
 { Requirements:
-  1. FileName must use double backslashes
-  2. dorm.loggers.Tracetool unit must be included in uses clause }
+  dorm.loggers.Tracetool unit must be included in uses clause }
 
-function CreateSQLiteSession(const FileName: string): TSession;
+function CreateSQLiteSession(FileName: string; Escaped: Boolean = False):
+    TSession;
 
 implementation
 
 uses
-  System.Classes, dorm.Commons;
+  System.Classes, dorm.Commons, System.SysUtils;
 
-function CreateSQLiteSession(const FileName: string): TSession;
+function CreateSQLiteSession(FileName: string; Escaped: Boolean = False):
+    TSession;
 var
   S: string;
 begin
+  if not Escaped then
+    FileName := StringReplace(FileName, '\', '\\', [rfReplaceAll]);
+
   S :=
     '{ ' +
     '  "persistence": { ' +
