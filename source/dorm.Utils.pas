@@ -64,6 +64,9 @@ type
 
 function FieldFor(const PropertyName: string): string; inline;
 
+var
+  UseFloatForDateTime: Boolean = True;
+
 implementation
 
 uses
@@ -71,7 +74,7 @@ uses
   Classes,
   TypInfo,
   dorm.Commons,
-  dorm.Collections;
+  dorm.Collections, TraceTool;
 
 class function TdormUtils.MethodCall(AObject: TObject; AMethodName: string;
   AParameters: array of TValue): TValue;
@@ -268,6 +271,9 @@ var
   _PropInfo: PTypeInfo;
 begin
   _PropInfo := AProp.PropertyType.Handle;
+  //MainTrace.Send('AProp.Name', AProp.Name);
+  //MainTrace.Send('_PropInfo.Name', _PropInfo.Name);
+
   if _PropInfo.Kind in [tkString, tkWString, tkChar, tkWChar, tkLString,
     tkUString] then
     Result := 'string'
@@ -276,7 +282,12 @@ begin
   else if _PropInfo = TypeInfo(TDate) then
     Result := 'date'
   else if _PropInfo = TypeInfo(TDateTime) then
-    Result := 'datetime'
+  begin
+    if UseFloatForDateTime and (_PropInfo.Kind = tkFloat) then
+      Result := 'float'
+    else
+      Result := 'datetime'
+  end
   else if _PropInfo = TypeInfo(Currency) then
     Result := 'decimal'
   else if _PropInfo = TypeInfo(TTime) then
@@ -289,6 +300,8 @@ begin
   end
   else if (_PropInfo.Kind = tkEnumeration) and (_PropInfo.Name = 'Boolean') then
     Result := 'boolean'
+  else if _PropInfo.Kind = tkEnumeration then
+    Result := 'integer'
   else if AProp.PropertyType.IsInstance and
     AProp.PropertyType.AsInstance.MetaclassType.InheritsFrom(TStream) then
     Result := 'blob'

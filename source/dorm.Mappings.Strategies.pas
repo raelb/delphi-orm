@@ -618,6 +618,8 @@ var
   RTTICache: TMappingCache;
 begin
   //MainTrace.Send('-- TCoCMappingStrategy.ParseField');
+  //MainTrace.Send('AProp.Name', AProp.Name);
+  
   FieldType := TdormUtils.GetFieldType(AProp);
   field := ATable.AddField;
   if AnsiUpperCase(AProp.Name) = 'ID' then

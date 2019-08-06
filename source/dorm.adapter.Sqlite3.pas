@@ -103,7 +103,7 @@ type
 implementation
 
 uses
-  dorm.Utils;
+  dorm.Utils, TraceTool;
 
 function TSqlite3PersistStrategy.Update(ARttiType: TRttiType; AObject: TObject;
   AMappingTable: TMappingTable; ACurrentVersion: Int64): Int64;
@@ -494,6 +494,7 @@ var
   field: TMappingField;
   v: TValue;
   S: string;
+  PropTypeInfo: PTypeInfo;
   sourceStream: TStream;
 begin
   try
@@ -506,7 +507,15 @@ begin
       end
       else if CompareText(field.FieldType, 'integer') = 0 then
       begin
-        v := AReader.FieldAsInteger(AReader.FieldIndex[field.FieldName]);
+        if (Field.RTTICache.RTTIProp <> nil) and
+           (Field.RTTICache.RTTIProp.PropertyType.TypeKind = tkEnumeration) then
+        begin
+          PropTypeInfo := Field.RTTICache.RTTIProp.PropertyType.Handle;
+          v := TValue.FromOrdinal(PropTypeInfo,
+            AReader.FieldAsInteger(AReader.FieldIndex[field.FieldName]));
+        end
+        else
+          v := AReader.FieldAsInteger(AReader.FieldIndex[field.FieldName]);
         S := field.FieldName + ' as integer';
       end
       else if CompareText(field.FieldType, 'blob') = 0 then
@@ -523,6 +532,11 @@ begin
         end
         else
           v := nil;
+      end
+      else if CompareText(field.FieldType, 'float') = 0 then
+      begin
+        v := AReader.FieldAsDouble(AReader.FieldIndex[field.FieldName]);
+        S := field.FieldName + ' as float';
       end
       else if CompareText(field.FieldType, 'decimal') = 0 then
       begin
@@ -555,6 +569,7 @@ begin
       end
       else
         raise Exception.Create('Unknown field type for ' + field.FieldName);
+
       try
         TdormUtils.SetField(AObject, field.RTTICache, v);
       except
@@ -643,8 +658,22 @@ begin
   end
   else if CompareText(aFieldType, 'integer') = 0 then
   begin
-    ADB.AddParamInt(aParameterName, aValue.AsInteger);
-    GetLogger.Debug(aParameterName + ' = ' + IntToStr(aValue.AsInteger));
+    //MainTrace.Send('aValueKind', aValue.Kind);
+    if aValue.Kind = tkEnumeration then
+    begin
+      ADB.AddParamInt(aParameterName, aValue.AsOrdinal);
+      GetLogger.Debug(aParameterName + ' = ' + IntToStr(aValue.AsOrdinal));
+    end
+    else
+    begin
+      ADB.AddParamInt(aParameterName, aValue.AsInteger);
+      GetLogger.Debug(aParameterName + ' = ' + IntToStr(aValue.AsInteger));
+    end;
+  end
+  else if CompareText(aFieldType, 'float') = 0 then
+  begin
+    ADB.AddParamFloat(aParameterName, aValue.AsExtended);
+    GetLogger.Debug(aParameterName + ' = ' + FloatToStr(aValue.AsExtended));
   end
   else if CompareText(aFieldType, 'decimal') = 0 then
   begin

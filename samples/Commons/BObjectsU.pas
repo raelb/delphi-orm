@@ -7,6 +7,7 @@ uses
   System.Classes;
 
 type
+  TGender = (gtMale, gtFemale);
 
   [Entity('CUSTOMERS')]
   TCustomer = class
@@ -16,9 +17,11 @@ type
     FID: Integer;
     FCreatedAt: TDate;
     FADDRESS: String;
+    FGender: TGender;
     procedure SetADDRESS(const Value: String);
     procedure SetCreatedAt(const Value: TDate);
     procedure SetEMail(const Value: String);
+    procedure SetGender(const Value: TGender);
     procedure SetID(const Value: Integer);
     procedure SetName(const Value: String);
   public
@@ -28,6 +31,7 @@ type
     property EMail: String read FEMail write SetEMail;
     [Column('CREATED_AT')]
     property CreatedAt: TDate read FCreatedAt write SetCreatedAt;
+    property Gender: TGender read FGender write SetGender;
   end;
 
   [Entity('CUSTOMERS_OS')]
@@ -233,6 +237,11 @@ end;
 procedure TCustomer.SetEMail(const Value: String);
 begin
   FEMail := Value;
+end;
+
+procedure TCustomer.SetGender(const Value: TGender);
+begin
+  FGender := Value;
 end;
 
 procedure TCustomer.SetID(const Value: Integer);
