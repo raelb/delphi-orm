@@ -4,3 +4,9 @@
 /samples/Commons/__history
 *.identcache
 *.stat
+/samples/DelphiXE5/TODOManager SQLite/Win32/Debug/*.log
+/samples/DelphiXE5/TODOManager SQLite/Win32/Debug/*.exe
+/samples/DelphiXE5/TODOManager SQLite/Win32/Debug/dcu
+/samples/DelphiXE5/TODOManager SQLite/__history
+/samples/DelphiXE5/TODOManager SQLite/__recovery
+/samples/DelphiXE5 - Copy
