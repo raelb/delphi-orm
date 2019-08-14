@@ -674,6 +674,7 @@ var
   v: TValue;
   s: string;
   sourceStream: TStream;
+  PropTypeInfo: PTypeInfo;
 begin
   try
     for field in AFieldsMapping do
@@ -685,7 +686,15 @@ begin
       end
       else if CompareText(field.FieldType, 'integer') = 0 then
       begin
-        v := AReader.Fields.ByNameAsInteger[field.FieldName];
+        if (Field.RTTICache.RTTIProp <> nil) and
+           (Field.RTTICache.RTTIProp.PropertyType.TypeKind = tkEnumeration) then
+        begin
+          PropTypeInfo := Field.RTTICache.RTTIProp.PropertyType.Handle;
+          v := TValue.FromOrdinal(PropTypeInfo,
+            AReader.Fields.ByNameAsInteger[field.FieldName]);
+        end
+        else
+          v := AReader.Fields.ByNameAsInteger[field.FieldName];
         s := field.FieldName + ' as integer';
       end
       else if CompareText(field.FieldType, 'date') = 0 then
@@ -769,6 +778,7 @@ var
   v: TValue;
   s: string;
   targetStream: TMemoryStream;
+  PropTypeInfo: PTypeInfo;
 begin
   try
     obj := TdormUtils.CreateObject(ARttiType);
@@ -781,7 +791,15 @@ begin
       end
       else if CompareText(field.FieldType, 'integer') = 0 then
       begin
-        v := AReader.Fields.ByNameAsInteger[field.FieldName];
+        if (Field.RTTICache.RTTIProp <> nil) and
+           (Field.RTTICache.RTTIProp.PropertyType.TypeKind = tkEnumeration) then
+        begin
+          PropTypeInfo := Field.RTTICache.RTTIProp.PropertyType.Handle;
+          v := TValue.FromOrdinal(PropTypeInfo,
+            AReader.Fields.ByNameAsInteger[field.FieldName]);
+        end
+        else
+          v := AReader.Fields.ByNameAsInteger[field.FieldName];
         s := field.FieldName + ' as integer';
       end
       else if CompareText(field.FieldType, 'date') = 0 then
@@ -882,11 +900,19 @@ begin
   end
   else if CompareText(AFieldType, 'integer') = 0 then
   begin
-    if IsNullable and CanBeConsideredAsNull(AValue) then
-      AStatement.Params.IsNull[ParameterIndex] := true
+    if aValue.Kind = tkEnumeration then
+    begin
+      AStatement.Params.AsInteger[ParameterIndex] := AValue.AsOrdinal;
+      GetLogger.Debug('Par' + IntToStr(ParameterIndex) + ' = ' + IntToStr(AValue.AsOrdinal));
+    end
     else
-      AStatement.Params.AsInteger[ParameterIndex] := AValue.AsInteger;
-    GetLogger.Debug('Par' + IntToStr(ParameterIndex) + ' = ' + IntToStr(AValue.AsInt64));
+    begin
+      if IsNullable and CanBeConsideredAsNull(AValue) then
+        AStatement.Params.IsNull[ParameterIndex] := true
+      else
+        AStatement.Params.AsInteger[ParameterIndex] := AValue.AsInteger;
+      GetLogger.Debug('Par' + IntToStr(ParameterIndex) + ' = ' + IntToStr(AValue.AsInt64));
+    end;
   end
   else if CompareText(AFieldType, 'boolean') = 0 then
   begin
