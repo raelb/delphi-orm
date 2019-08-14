@@ -13,7 +13,8 @@ uses
   dorm.commons,
   dorm.loggers,
   BObjectsU in '..\..\Commons\BObjectsU.pas',
-  RandomUtilsU in '..\..\Commons\RandomUtilsU.pas';
+  RandomUtilsU in '..\..\Commons\RandomUtilsU.pas',
+  dorm.Mappings.Strategies;
 
 {$IFDEF LINK_SQLSERVERFIREDAC_ADAPTER}
 
@@ -84,6 +85,8 @@ begin
 end;
 
 begin
+  MapCamelCaseToSnakeCase := False;
+
   Write('Press return to execute an insert...');
   ReadLn;
   SimpleInsert;
