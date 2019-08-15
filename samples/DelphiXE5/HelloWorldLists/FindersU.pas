@@ -25,7 +25,9 @@ end;
 
 function TPeopleFinder.GetSQL: string;
 begin
-  Result := 'SELECT * FROM CUSTOMERS_OS WHERE CREATED_AT BETWEEN ''2013-01-01'' AND ''2013-06-30'' ORDER BY CREATED_AT';
+  Result := 'SELECT * FROM CUSTOMERS_OS WHERE ' +
+    'CREATED_AT BETWEEN ''2013-01-01'' AND ''2019-12-30'' ' +
+    'ORDER BY CREATED_AT';
 end;
 
 end.
