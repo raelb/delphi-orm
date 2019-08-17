@@ -17,3 +17,5 @@
 /samples/DelphiXE5/TODOManager SQLite/*.skincfg
 /samples/DelphiXE5/HelloWorld/Win32/FirebirdUIB
 /samples/DelphiXE5/HelloWorldLists/Win32/FirebirdUIB
+**/__history
+**/*.dproj.local
