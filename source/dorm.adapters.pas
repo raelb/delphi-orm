@@ -7,7 +7,11 @@ interface
   If you want to use an adapter, do not include statically the unit but enable it
   in the dorm.inc file, then include only THIS file
 }
-{$I DORM.INC}
+{$IFDEF DORM_SQLITE}
+  {$I DORM_SQLITE.INC}  
+{$ELSE}
+  {$I DORM.INC}
+{$ENDIF}
 
 uses
   SysUtils

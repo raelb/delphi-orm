@@ -36,4 +36,5 @@
 { .$DEFINE LINK_CODESITE }
 { .$DEFINE LINK_SMARTINSPECT }
 {$DEFINE LINK_FILELOG }
+{$DEFINE LINK_TRACETOOL }
 { **************** end loggers section ************************* }

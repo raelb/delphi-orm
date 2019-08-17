@@ -7,6 +7,9 @@ interface
 
 uses
   SysUtils
+{$IFDEF LINK_TRACETOOL}
+  ,dorm.loggers.TraceTool
+ {$ENDIF}
 {$IFDEF LINK_CODESITE}
   , dorm.loggers.CodeSite
 {$ENDIF}
