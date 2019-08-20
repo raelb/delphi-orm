@@ -18,8 +18,7 @@ uses
   dorm.ObjectStatus,
   RandomUtilsU in '..\..\Commons\RandomUtilsU.pas',
   Console in '..\..\Commons\Console.pas',
-  FindersU in 'FindersU.pas',
-  dorm.Mappings.Strategies;
+  FindersU in 'FindersU.pas';
 
 {$IFDEF LINK_SQLSERVERFIREDAC_ADAPTER}
 
@@ -151,8 +150,6 @@ var
   K: char;
 
 begin
-  MapCamelCaseToSnakeCase := False;
-
   repeat
     ClrScr;
     WriteLn('1. List of object using LoadList<T>');

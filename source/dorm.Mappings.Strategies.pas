@@ -115,7 +115,7 @@ type
   end;
 
 var
-  MapCamelCaseToSnakeCase: Boolean = True;
+  MapCamelCaseToSnakeCase: Boolean = False;
 
 implementation
 
