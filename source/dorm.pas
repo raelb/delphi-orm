@@ -177,6 +177,7 @@ type
     procedure CopyObject(SourceObject, TargetObject: TObject);
     function GetLogger: IdormLogger;
     function Strategy: IdormPersistStrategy;
+    function GetRawDatabaseObj: TObject;
     function OIDIsSet(AObject: TObject): boolean;
     procedure ClearOID(AObject: TObject);
     procedure ForEach<T: class>(List: TObjectList<T>; AProc: TProc<T>); overload;
@@ -1659,6 +1660,13 @@ begin
       Result := true;
     end;
   end;
+end;
+
+function TSession.GetRawDatabaseObj: TObject;
+begin
+  Result := nil;
+  if GetStrategy <> nil then
+    Result := GetStrategy.GetRawDatabaseObj;
 end;
 
 function TSession.Insert(AObject: TObject): TValue;

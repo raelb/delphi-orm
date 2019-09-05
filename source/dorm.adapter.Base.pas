@@ -38,6 +38,7 @@ type
     function GetSelectSQL(Criteria: ICustomCriteria): string; overload;
     function GetCountSQL(ACriteria: ICriteria;
       AMappingTable: TMappingTable): string;
+    function GetRawDatabaseObj: TObject; virtual;
   end;
 
 implementation
@@ -175,6 +176,11 @@ begin
   if WhereSQL <> EmptyStr then
     SQL := SQL + ' WHERE ' + WhereSQL;
   Result := SQL;
+end;
+
+function TBaseAdapter.GetRawDatabaseObj: TObject;
+begin
+  Result := nil;
 end;
 
 function TBaseAdapter.GetSelectSQL(Criteria: ICustomCriteria): string;

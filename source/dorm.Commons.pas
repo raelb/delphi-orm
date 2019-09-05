@@ -135,6 +135,7 @@ type
     function GetCountSQL(ACriteria: ICriteria; AMappingTable: TMappingTable): string;
     function GetDatabaseBuilder(AEntities: TList<string>; AMappings: ICacheMappingStrategy)
       : IDataBaseBuilder;
+    function GetRawDatabaseObj: TObject;
     function ExecuteCommand(ACommand: IdormCommand): Int64;
   end;
 

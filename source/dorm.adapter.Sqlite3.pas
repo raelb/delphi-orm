@@ -97,6 +97,7 @@ type
     function ExecuteAndGetFirst(SQL: string): Int64;
     function GetDatabaseBuilder(AEntities: TList<String>; AMappings: ICacheMappingStrategy)
       : IDataBaseBuilder;
+    function GetRawDatabaseObj: TObject; override;
     function ExecuteCommand(ACommand: IdormCommand): Int64;
   end;
 
@@ -269,6 +270,11 @@ function TSqlite3PersistStrategy.GetDatabaseBuilder(AEntities: TList<String>;
 begin
   raise EdormException.Create('Not implemented');
   // Result := TdormSqlite3DBCreator.Create(AMappings, AEntities);
+end;
+
+function TSqlite3PersistStrategy.GetRawDatabaseObj: TObject;
+begin
+  Result := DB;
 end;
 
 function TSqlite3PersistStrategy.GetKeysGenerator: IdormKeysGenerator;
