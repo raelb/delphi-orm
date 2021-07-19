@@ -123,7 +123,7 @@ uses
 
 const
   SUPER_ARRAY_LIST_DEFAULT_SIZE = 32;
-  SUPER_TOKENER_MAX_DEPTH = 32;
+  SUPER_TOKENER_MAX_DEPTH = 64; //32;
 
   SUPER_AVL_MAX_DEPTH = sizeof(longint) * 8;
   SUPER_AVL_MASK_HIGH_BIT = not ((not longword(0)) shr 1);
